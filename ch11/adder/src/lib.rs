@@ -37,6 +37,14 @@ impl Guess {
     }
 }
 
+fn helper<'a, 'b, T>(_: &'a &'b (), v: &'b T) -> &'a T { v }
+
+/// Turn any `&T` into a `&'static T`. May introduce undefined behavior.
+pub fn make_static<'a, T>(input: &'a T) -> &'static T {
+    let f: fn(_, &'a T) -> &'static T = helper;
+    f(&&(), input)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -85,5 +93,15 @@ mod tests {
         }
     }
 
+    #[test]
+    fn changing_lifetime() {
+        let r;
+        {
+            let x = 5;
+            r = make_static(&x);
+        }
+        println!("r: {}", r);
+        assert_eq!(5, *r)
+    }
 
 }
