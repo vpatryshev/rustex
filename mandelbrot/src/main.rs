@@ -16,7 +16,7 @@ fn main() {
   }
   if args.len() != 5 {
     eprintln!("Need five arguments");
-    std::process::exit(1);
+    std::process::exit(2);
   }
   let bounds = parse_pair(&args[2], 'x').expect("need sizes, e.g. 100x200");
   let upper_left = parse_complex(&args[3]).expect("need upper left e.g. 0.0,1.0");
@@ -50,6 +50,8 @@ fn main() {
 }
 
 fn escape_time(c: Complex<f64>, limit: u32) -> Option<u32> {
+  let one = Complex::new(1.0, 0.0);
+
   let mut z = Complex::new(0.0, 0.0);
   for i in 0..limit {
     z = z * z + c;
